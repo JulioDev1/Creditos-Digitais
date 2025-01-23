@@ -39,5 +39,16 @@ namespace Carteiras_Digitais.Test.Repositories
 
             AddedUser.Should().Be(newUser);
         }
+        [Fact]
+        public async Task ShouldBeReturnNullWhenEmailIsNotFound() 
+        {
+            var context = AppDbContextFactory.CreateInMemoryDbContext();
+
+            var repository = new UserRepository(context);
+
+            var userNotFounded = await repository.FindUserByEmail("fakeEmail@mail.com");
+
+            userNotFounded.Should().BeNull();
+        }
     }
 }
