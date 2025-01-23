@@ -26,5 +26,10 @@ namespace Carteiras_Digitais.Infrasctruture.Repositories
             
             return user.Id;
         }
+
+        public async Task<User?> FindUserByEmail(string email)
+        {
+           return await context.users.FirstOrDefaultAsync(e=> e.Email == email);
+        }
     }
 }

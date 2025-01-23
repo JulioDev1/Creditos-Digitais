@@ -11,7 +11,7 @@ namespace Carteiras_Digitais.Api.Domain.Models
         public Guid Id { get; set; }
         public decimal Balance { get; set; } = 0;
         public Guid UserId { get; set; }
-        public required User user { get; set; }
+        public User ? user { get; set; }
         public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
         public DateTime CreatedAt { get; } = DateTime.Now;
         

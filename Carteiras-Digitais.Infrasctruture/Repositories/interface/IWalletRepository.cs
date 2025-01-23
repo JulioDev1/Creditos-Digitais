@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Carteiras_Digitais.Infrasctruture.Repositories
 {
-    public interface IUserRepositories
+    public interface IWalletRepository
     {
-        Task<Guid> CreateUserDatabase(User user);
-        Task<User?> FindUserByEmail(string email);
+        Task<Guid> CreateWallet(Wallet wallet);
     }
 }
