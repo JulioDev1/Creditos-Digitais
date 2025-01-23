@@ -1,0 +1,6 @@
+@Carteiras_Digitais_HostAddress = http://localhost:5047
+
+GET {{Carteiras_Digitais_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
