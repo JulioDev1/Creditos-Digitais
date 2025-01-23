@@ -4,6 +4,7 @@ using Carteiras_Digitais.Infrasctruture.Database;
 using Carteiras_Digitais.Infrasctruture.Repositories;
 using Carteiras_Digitais.Test.Repositories.Database;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +50,27 @@ namespace Carteiras_Digitais.Test.Repositories
             var userNotFounded = await repository.FindUserByEmail("fakeEmail@mail.com");
 
             userNotFounded.Should().BeNull();
+        }
+        [Fact]
+        public async Task ShouldBeReturnUserDataWhenFoundUser()
+        {
+            var context = AppDbContextFactory.CreateInMemoryDbContext();
+
+            var repository = new UserRepository(context);
+
+            var newUser = fixture.Create<User>();
+
+            context.users.Add(newUser);
+
+            await context.SaveChangesAsync();
+
+            var findingUser = await context.users.FirstOrDefaultAsync(u=> u.Email == newUser.Email);
+
+            var userFounded = await repository.FindUserByEmail(findingUser.Email);
+
+            findingUser.Should().NotBeNull();
+            userFounded.Should().Be(newUser);
+            
         }
     }
 }
