@@ -16,14 +16,16 @@ namespace Carteiras_Digitais.Test.Repositories
     public class UserRepositoriesTest
     {
         private readonly Fixture fixture;
+        
         public UserRepositoriesTest() 
         {
             this.fixture = new Fixture();
             fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
-            // Adiciona um comportamento que ignora referências circulares
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
+ 
         [Fact]
+        
         public async Task ShouldBeCreateUserInDatabase() 
         { 
             var context = AppDbContextFactory.CreateInMemoryDbContext();
