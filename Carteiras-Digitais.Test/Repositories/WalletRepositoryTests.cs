@@ -41,8 +41,6 @@ namespace Carteiras_Digitais.Test.Repositories
             var walletCreated = await WalletRepository.CreateWallet(walletMock);
 
             walletCreated.Should().Be(walletMock.Id);
-
-
         }
     }
 }
