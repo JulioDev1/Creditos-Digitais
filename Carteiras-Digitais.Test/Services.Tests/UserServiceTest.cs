@@ -37,11 +37,10 @@ namespace Carteiras_Digitais.Test.Services
         {
             var InputUserRegister = fixture.Create<User>();
 
-            var WalletUser = fixture.Build<Wallet>()
-                .With(w => w.UserId, InputUserRegister.Id)
-                .Create();
+            var WalletUser = fixture.Build<Wallet>().With(w => w.UserId, InputUserRegister.Id).Create();
 
-            userRepository.Setup(r => r.FindUserByEmail(InputUserRegister.Email)).ReturnsAsync(new User { Email = InputUserRegister.Email});
+            userRepository.Setup(r => r.FindUserByEmail(InputUserRegister.Email))
+                .ReturnsAsync(new User { Email = InputUserRegister.Email});
 
             walletRepository.Setup(w => w.CreateWallet(WalletUser)).ReturnsAsync(WalletUser.Id);
 
@@ -63,18 +62,8 @@ namespace Carteiras_Digitais.Test.Services
         {
             var InputUserRegister = fixture.Create<User>();
 
-            var WalletUser = fixture.Build<Wallet>()
-                .With(w => w.UserId, InputUserRegister.Id)
+            var WalletUser = fixture.Build<Wallet>().With(w => w.UserId, InputUserRegister.Id)
                 .Create();
-
-            userRepository.Setup(r => r.FindUserByEmail(InputUserRegister.Email)).ReturnsAsync((User? ) null);
-
-            userRepository.Setup(r => r.CreateUserDatabase(InputUserRegister)).ReturnsAsync(InputUserRegister.Id);
-            
-            walletRepository.Setup(w => w.CreateWallet(WalletUser)).ReturnsAsync(WalletUser.Id);
-
-
-            var userService = new UserService(userRepository.Object, walletRepository.Object);
 
             var InputSuccess = fixture.Build<UserDto>()
                 .With(u => u.Email, InputUserRegister.Email)
@@ -82,10 +71,19 @@ namespace Carteiras_Digitais.Test.Services
                 .With(u => u.Name, InputUserRegister.Name)
                 .Create();
 
+            userRepository.Setup(r => r.FindUserByEmail(InputUserRegister.Email)).ReturnsAsync((User?) null);
+
+            userRepository.Setup(r => r.CreateUserDatabase(It.IsAny<User>())).ReturnsAsync(InputUserRegister.Id);
+            
+            walletRepository.Setup(w => w.CreateWallet(WalletUser)).ReturnsAsync(WalletUser.Id);
+
+            var userService = new UserService(userRepository.Object, walletRepository.Object);
+
+
             var action = await userService.CreateUserAndWallet(InputSuccess);
 
-            action.Should().Be(action);
-          
+            action.Should().Be(InputUserRegister.Id);
+
         }
     }
 }

@@ -68,7 +68,7 @@ namespace Carteiras_Digitais.Test.Repositories
 
             var findingUser = await context.users.FirstOrDefaultAsync(u=> u.Email == newUser.Email);
 
-            var userFounded = await repository.FindUserByEmail(findingUser.Email);
+            var userFounded = await repository.FindUserByEmail(findingUser!.Email);
 
             findingUser.Should().NotBeNull();
             userFounded.Should().Be(newUser);
