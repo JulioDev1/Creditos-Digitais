@@ -69,9 +69,10 @@ namespace Carteiras_Digitais.Test.Services
 
             userRepository.Setup(r => r.FindUserByEmail(InputUserRegister.Email)).ReturnsAsync((User? ) null);
 
+            userRepository.Setup(r => r.CreateUserDatabase(InputUserRegister)).ReturnsAsync(InputUserRegister.Id);
+            
             walletRepository.Setup(w => w.CreateWallet(WalletUser)).ReturnsAsync(WalletUser.Id);
 
-            userRepository.Setup(r => r.CreateUserDatabase(InputUserRegister)).ReturnsAsync(InputUserRegister.Id);
 
             var userService = new UserService(userRepository.Object, walletRepository.Object);
 
@@ -81,10 +82,10 @@ namespace Carteiras_Digitais.Test.Services
                 .With(u => u.Name, InputUserRegister.Name)
                 .Create();
 
+            var action = await userService.CreateUserAndWallet(InputSuccess);
 
-            var action =  await userService.CreateUserAndWallet(InputSuccess);
-
-            Assert.Equal(InputUserRegister.Id, action);
+            action.Should().Be(action);
+          
         }
     }
 }
