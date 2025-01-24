@@ -33,6 +33,7 @@
     <ProjectReference Include="..\Carteiras-Digitais.Api\Carteiras-Digitais.Core.csproj" />
     <ProjectReference Include="..\Carteiras-Digitais.Application\Carteiras-Digitais.Application.csproj" />
     <ProjectReference Include="..\Carteiras-Digitais.Infrasctruture\Carteiras-Digitais.Infrasctruture.csproj" />
+    <ProjectReference Include="..\Carteiras-Digitais\Carteiras-Digitais.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>

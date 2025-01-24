@@ -79,7 +79,6 @@ namespace Carteiras_Digitais.Test.Services
 
             var userService = new UserService(userRepository.Object, walletRepository.Object);
 
-
             var action = await userService.CreateUserAndWallet(InputSuccess);
 
             action.Should().Be(InputUserRegister.Id);

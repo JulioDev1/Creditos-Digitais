@@ -1,15 +1,10 @@
 ﻿using AutoFixture;
 using Carteiras_Digitais.Api.Domain.Models;
-using Carteiras_Digitais.Infrasctruture.Database;
 using Carteiras_Digitais.Infrasctruture.Repositories;
 using Carteiras_Digitais.Test.Repositories.Database;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Carteiras_Digitais.Test.Repositories
 {
@@ -71,6 +66,7 @@ namespace Carteiras_Digitais.Test.Repositories
             var userFounded = await repository.FindUserByEmail(findingUser!.Email);
 
             findingUser.Should().NotBeNull();
+            
             userFounded.Should().Be(newUser);
             
         }
