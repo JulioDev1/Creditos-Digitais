@@ -46,5 +46,24 @@ namespace Carteiras_Digitais.Test.Controller.Tests
             
             resultAsObject.Value.Should().Be("email not found");
         }
+        [Fact]
+        public async Task ShouldBeReturnErrorWhenPasswordIsWrong()
+        {
+            var InputSuccess = fixture.Create<LoginDto>();
+
+            serviceMock.Setup(a => a.AuthenticateUser(InputSuccess)).ThrowsAsync(new UnauthorizedAccessException("incorrectly Password"));
+
+            var controller = new AuthController(serviceMock.Object);
+
+            var result = await controller.CreateUser(InputSuccess);
+
+            result.Should().BeOfType<UnauthorizedObjectResult>();
+
+            var resultAsObject = result as UnauthorizedObjectResult;
+
+            resultAsObject.Should().NotBeNull();
+
+            resultAsObject.Value.Should().Be("incorrectly Password");
+        }
     }
 }
