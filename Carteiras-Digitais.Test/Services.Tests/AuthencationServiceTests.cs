@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,6 +67,28 @@ namespace Carteiras_Digitais.Test.Services.Tests
             Func<Task> action = async () => await authenticationService.AuthenticateUser(InputPasswordIncorrect);
 
             await action.Should().ThrowAsync<Exception>("incorrectly Password");
+        }
+        [Fact]
+        public async Task ShouldReturnSuccesAndLoginUser()
+        {
+            var InputSuccess = fixture.Create<LoginDto>();
+
+            var userWasFound = fixture.Build<User>()
+                .With(u => u.Email, InputSuccess.Email)
+                .With(u => u.Password, InputSuccess.Password)
+                .Create();
+
+            userRepository.Setup(r => r.FindUserByEmail(InputSuccess.Email))
+                .ReturnsAsync((userWasFound));
+
+            passwordService.Setup(p => p.Compare(InputSuccess.Password, userWasFound.Password)).Returns(true);
+
+            var authenticationService = new AuthService(userRepository.Object, passwordService.Object);
+
+            var userLogged = await authenticationService.AuthenticateUser(InputSuccess);
+
+            
+            userLogged.Should().Be(userWasFound);
         }
     }
 }
