@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,5 +66,35 @@ namespace Carteiras_Digitais.Test.Controller.Tests
 
             resultAsObject.Value.Should().Be("incorrectly Password");
         }
+        [Fact]
+        public async Task ShoulbeReturnSuccessAndGenerateToken()
+        {
+
+            var InputSuccess = fixture.Create<LoginDto>();
+            
+            var userWasFound = fixture.Build<User>()
+                .With(u => u.Email, InputSuccess.Email)
+                .With(u => u.Password, InputSuccess.Password)
+                .Create();
+
+            var jwt = "fake-jwt";
+            
+            serviceMock.Setup(a => a.AuthenticateUser(InputSuccess)).ReturnsAsync(userWasFound);
+
+            serviceMock.Setup(a => a.GenerateAuthToken(userWasFound)).Returns(jwt);
+
+            var controller = new AuthController(serviceMock.Object);
+
+            var result = await controller.CreateUser(InputSuccess);
+
+            result.Should().BeOfType<OkObjectResult>();
+
+            var resultAsObject = result as OkObjectResult;
+
+            resultAsObject.Should().NotBeNull();
+
+            resultAsObject.Value.Should().Be(jwt);
+        }
+
     }
 }
