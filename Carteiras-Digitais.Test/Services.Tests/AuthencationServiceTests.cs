@@ -37,7 +37,7 @@ namespace Carteiras_Digitais.Test.Services.Tests
 
             Func<Task> action = async () => await authenticationService.AuthenticateUser(InputEmailNotFound);
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<KeyNotFoundException>();
         }
         [Fact]
         public async Task ShouldBeReturnErrorWhenPasswordNotMatch()
@@ -57,7 +57,7 @@ namespace Carteiras_Digitais.Test.Services.Tests
 
             Func<Task> action = async () => await authenticationService.AuthenticateUser(InputPasswordIncorrect);
 
-            await action.Should().ThrowAsync<Exception>("incorrectly Password");
+            await action.Should().ThrowAsync<UnauthorizedAccessException>("incorrectly Password");
         }
         [Fact]
         public async Task ShouldReturnSuccesAndLoginUser()
@@ -78,7 +78,6 @@ namespace Carteiras_Digitais.Test.Services.Tests
 
             var userLogged = await authenticationService.AuthenticateUser(InputSuccess);
 
-            
             userLogged.Should().Be(userWasFound);
         }
     }
