@@ -1,20 +1,11 @@
 ﻿using AutoFixture;
-using Carteiras_Digitais.Application.Helpers;
 using Carteiras_Digitais.Application.Services;
 using Carteiras_Digitais.Core.Domain.Interfaces;
 using Carteiras_Digitais.Core.Domain.Models;
-using Carteiras_Digitais.Infrasctruture.Repositories;
 using Carteiras_Digitais.Infrasctruture.Repositories.@interface;
 using Carteiras_Digitais.Shared.Dtos;
 using FluentAssertions;
-using Microsoft.AspNetCore.Identity;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Carteiras_Digitais.Test.Services.Tests
 {
