@@ -1,7 +1,6 @@
 ﻿using Carteiras_Digitais.Core.Domain.Models;
 using Carteiras_Digitais.Core.Domain.Interfaces;
 using Carteiras_Digitais.Shared.Dtos;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Carteiras_Digitais.Api.Controllers
