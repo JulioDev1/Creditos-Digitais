@@ -1,0 +1,6 @@
+services:
+  carteiras-digitais.api:
+    image: ${DOCKER_REGISTRY-}carteirasdigitaisapi
+    build:
+      context: .
+      dockerfile: Carteiras-Digitais/Dockerfile

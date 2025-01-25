@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Carteiras_Digitais.Api.Domain.Models
+namespace Carteiras_Digitais.Core.Domain.Models
 {
     public class User
     {
@@ -12,8 +12,8 @@ namespace Carteiras_Digitais.Api.Domain.Models
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public Wallet ? wallet { get; set; }
+        public Wallet? wallet { get; set; }
 
-       
+
     }
 }

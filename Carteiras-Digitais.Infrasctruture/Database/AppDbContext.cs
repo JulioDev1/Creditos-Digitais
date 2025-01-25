@@ -1,4 +1,4 @@
-﻿using Carteiras_Digitais.Api.Domain.Models;
+﻿using Carteiras_Digitais.Core.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Carteiras_Digitais.Infrasctruture.Database

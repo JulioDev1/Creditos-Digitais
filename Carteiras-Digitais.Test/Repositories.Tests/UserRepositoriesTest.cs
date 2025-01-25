@@ -1,30 +1,30 @@
 ﻿using AutoFixture;
-using Carteiras_Digitais.Api.Domain.Models;
+using Carteiras_Digitais.Core.Domain.Models;
 using Carteiras_Digitais.Infrasctruture.Repositories;
-using Carteiras_Digitais.Test.Repositories.Database;
+using Carteiras_Digitais.Test.Repositories.Tests.Database;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Carteiras_Digitais.Test.Repositories
+namespace Carteiras_Digitais.Test.Repositories.Tests
 {
     public class UserRepositoriesTest
     {
         private readonly Fixture fixture;
-        
-        public UserRepositoriesTest() 
+
+        public UserRepositoriesTest()
         {
-            this.fixture = new Fixture();
+            fixture = new Fixture();
             fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
- 
+
         [Fact]
-        
-        public async Task ShouldBeCreateUserInDatabase() 
-        { 
+
+        public async Task ShouldBeCreateUserInDatabase()
+        {
             var context = AppDbContextFactory.CreateInMemoryDbContext();
-            
+
             var repository = new UserRepository(context);
 
             var newUser = fixture.Create<User>();
@@ -38,7 +38,7 @@ namespace Carteiras_Digitais.Test.Repositories
             AddedUser.Should().Be(newUser);
         }
         [Fact]
-        public async Task ShouldBeReturnNullWhenEmailIsNotFound() 
+        public async Task ShouldBeReturnNullWhenEmailIsNotFound()
         {
             var context = AppDbContextFactory.CreateInMemoryDbContext();
 
@@ -61,14 +61,14 @@ namespace Carteiras_Digitais.Test.Repositories
 
             await context.SaveChangesAsync();
 
-            var findingUser = await context.users.FirstOrDefaultAsync(u=> u.Email == newUser.Email);
+            var findingUser = await context.users.FirstOrDefaultAsync(u => u.Email == newUser.Email);
 
             var userFounded = await repository.FindUserByEmail(findingUser!.Email);
 
             findingUser.Should().NotBeNull();
-            
+
             userFounded.Should().Be(newUser);
-            
+
         }
     }
 }

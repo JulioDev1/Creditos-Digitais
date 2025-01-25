@@ -1,10 +1,5 @@
-﻿using BCrypt.Net;
-using Carteiras_Digitais.Api.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Carteiras_Digitais.Core.Domain.Interfaces;
+
 
 namespace Carteiras_Digitais.Application.Helpers
 {

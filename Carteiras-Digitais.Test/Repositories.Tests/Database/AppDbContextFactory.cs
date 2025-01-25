@@ -1,14 +1,9 @@
-﻿using AutoFixture;
-using Carteiras_Digitais.Api.Domain.Models;
+﻿using Carteiras_Digitais.Core.Domain.Models;
 using Carteiras_Digitais.Infrasctruture.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Carteiras_Digitais.Test.Repositories.Database
+
+namespace Carteiras_Digitais.Test.Repositories.Tests.Database
 {
     public class AppDbContextFactory
     {
@@ -34,7 +29,7 @@ namespace Carteiras_Digitais.Test.Repositories.Database
                 Id = Guid.NewGuid(),
                 Name = "Test User",
                 Email = "testuser@example.com",
-                Password = "password123",                
+                Password = "password123",
             });
 
             context.SaveChanges();

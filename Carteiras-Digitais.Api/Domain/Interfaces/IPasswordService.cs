@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Carteiras_Digitais.Api.Domain.Interfaces
+namespace Carteiras_Digitais.Core.Domain.Interfaces
 {
     public interface IPasswordService
     {

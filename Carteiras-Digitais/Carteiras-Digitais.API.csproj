@@ -1,10 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Carteiras_Digitais</RootNamespace>
+    <RootNamespace>Carteiras_Digitais.Api</RootNamespace>
+    <UserSecretsId>9de3dfc4-7c36-4f16-a523-2a3525eddc3c</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,19 +16,16 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Carteiras-Digitais.Api\Carteiras-Digitais.Core.csproj" />
+    <ProjectReference Include="..\Carteiras-Digitais.Application\Carteiras-Digitais.Application.csproj" />
     <ProjectReference Include="..\Carteiras-Digitais.Infrasctruture\Carteiras-Digitais.Infrasctruture.csproj" />
-    <ProjectReference Include="..\Carteiras-Digitais.Test\Carteiras-Digitais.Test.csproj" />
   </ItemGroup>
 
 </Project>

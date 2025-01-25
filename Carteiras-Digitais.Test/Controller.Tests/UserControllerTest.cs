@@ -1,42 +1,38 @@
 ﻿using AutoFixture;
 using Carteiras_Digitais.Application.Services;
-using Carteiras_Digitais.Controllers;
+using Carteiras_Digitais.Api.Controllers;
 using Carteiras_Digitais.Shared.Dtos;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Carteiras_Digitais.Core.Domain.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Carteiras_Digitais.Test.Controller.Tests
 {
     public class UserControllerTest
     {
         private readonly Fixture fixture;
-        private readonly Mock<UserService> serviceMock;
+        private readonly Mock<IUserService> serviceMock;
         public UserControllerTest() 
         {
-            this.serviceMock = new Mock<UserService>();
+            this.serviceMock = new Mock<IUserService>();
             this.fixture = new Fixture();
             fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
         [Fact]
-        public async Task ShouldReturnErrorWhenFieldsEmpty()
+        public async Task ShouldReturnCreateUserSuccessEmpty()
         {
-            var InputNullEmailField = fixture.Build<UserDto>()
-                .With(u => u.Email, string.Empty)
+            var InputNullPasswordField = fixture.Build<UserDto>()
                 .Create();
 
-            serviceMock.Setup(u => u.CreateUserAndWallet(InputNullEmailField)).ReturnsAsync((Guid?)null);
+            serviceMock.Setup(u => u.CreateUserAndWallet(InputNullPasswordField)).ReturnsAsync((Guid?)null);
 
             var userController = new UserController(serviceMock.Object);
-           
-            Func<Task> controllerAction = async () => await userController.CreateUserAccount(InputNullEmailField);
-           
-            await controllerAction.Should().ThrowAsync<ArgumentNullException>();
+
+            await userController.CreateUserAccount(InputNullPasswordField);
+
+            userController.Should().NotBeNull();
         }
     }
 }

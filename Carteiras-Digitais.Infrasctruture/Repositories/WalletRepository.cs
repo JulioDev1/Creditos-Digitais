@@ -1,10 +1,7 @@
-﻿using Carteiras_Digitais.Api.Domain.Models;
+﻿using Carteiras_Digitais.Core.Domain.Models;
 using Carteiras_Digitais.Infrasctruture.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Carteiras_Digitais.Infrasctruture.Repositories.@interface;
+
 
 namespace Carteiras_Digitais.Infrasctruture.Repositories
 {

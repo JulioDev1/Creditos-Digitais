@@ -1,19 +1,14 @@
 ﻿using AutoFixture;
-using Carteiras_Digitais.Api.Domain.Interfaces;
-using Carteiras_Digitais.Api.Domain.Models;
 using Carteiras_Digitais.Application.Helpers;
 using Carteiras_Digitais.Application.Services;
-using Carteiras_Digitais.Infrasctruture.Repositories;
+using Carteiras_Digitais.Core.Domain.Interfaces;
+using Carteiras_Digitais.Core.Domain.Models;
+using Carteiras_Digitais.Infrasctruture.Repositories.@interface;
 using Carteiras_Digitais.Shared.Dtos;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Carteiras_Digitais.Test.Services
+namespace Carteiras_Digitais.Test.Services.Tests
 {
     public class UserServiceTest
     {
@@ -24,12 +19,12 @@ namespace Carteiras_Digitais.Test.Services
 
         public UserServiceTest()
         {
-            this.userRepository = new Mock<IUserRepositories>();
-            this.walletRepository = new Mock<IWalletRepository>();  
-            this.fixture = new Fixture();
+            userRepository = new Mock<IUserRepositories>();
+            walletRepository = new Mock<IWalletRepository>();
+            fixture = new Fixture();
             fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-            this.passwordService = new PasswordService();
+            passwordService = new PasswordService();
         }
 
         [Fact]
@@ -40,7 +35,7 @@ namespace Carteiras_Digitais.Test.Services
             var WalletUser = fixture.Build<Wallet>().With(w => w.UserId, InputUserRegister.Id).Create();
 
             userRepository.Setup(r => r.FindUserByEmail(InputUserRegister.Email))
-                .ReturnsAsync(new User { Email = InputUserRegister.Email});
+                .ReturnsAsync(new User { Email = InputUserRegister.Email });
 
             walletRepository.Setup(w => w.CreateWallet(WalletUser)).ReturnsAsync(WalletUser.Id);
 
@@ -53,7 +48,7 @@ namespace Carteiras_Digitais.Test.Services
                 .Create();
 
 
-            Func<Task> action = async ()=> await userService.CreateUserAndWallet(InputError);
+            Func<Task> action = async () => await userService.CreateUserAndWallet(InputError);
 
             await action.Should().ThrowAsync<Exception>();
         }
@@ -71,10 +66,10 @@ namespace Carteiras_Digitais.Test.Services
                 .With(u => u.Name, InputUserRegister.Name)
                 .Create();
 
-            userRepository.Setup(r => r.FindUserByEmail(InputUserRegister.Email)).ReturnsAsync((User?) null);
+            userRepository.Setup(r => r.FindUserByEmail(InputUserRegister.Email)).ReturnsAsync((User?)null);
 
             userRepository.Setup(r => r.CreateUserDatabase(It.IsAny<User>())).ReturnsAsync(InputUserRegister.Id);
-            
+
             walletRepository.Setup(w => w.CreateWallet(WalletUser)).ReturnsAsync(WalletUser.Id);
 
             var userService = new UserService(userRepository.Object, walletRepository.Object);

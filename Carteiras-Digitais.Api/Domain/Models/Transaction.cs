@@ -1,11 +1,10 @@
-﻿
-namespace Carteiras_Digitais.Api.Domain.Models
+﻿namespace Carteiras_Digitais.Core.Domain.Models
 {
     public class Transaction
     {
         public Guid Id { get; set; }
         public decimal Amount { get; set; }
-        public string ? Description { get; set; }
+        public string? Description { get; set; }
         public Guid SenderWalletId { get; set; }
         public Guid ReceiverWalletId { get; set; }
         public required Wallet Wallet { get; set; }

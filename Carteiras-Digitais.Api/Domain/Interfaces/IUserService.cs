@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Carteiras_Digitais.Api.Domain.Interfaces
+namespace Carteiras_Digitais.Core.Domain.Interfaces
 {
     public interface IUserService
     {
-        Task<Guid> CreateUserAndWallet(UserDto userDto);
+        Task<Guid?> CreateUserAndWallet(UserDto userDto);
     }
 }

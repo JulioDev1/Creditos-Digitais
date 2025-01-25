@@ -1,7 +1,7 @@
-﻿using Carteiras_Digitais.Api.Domain.Interfaces;
-using Carteiras_Digitais.Api.Domain.Models;
-using Carteiras_Digitais.Application.Helpers;
-using Carteiras_Digitais.Infrasctruture.Repositories;
+﻿using Carteiras_Digitais.Application.Helpers;
+using Carteiras_Digitais.Core.Domain.Interfaces;
+using Carteiras_Digitais.Core.Domain.Models;
+using Carteiras_Digitais.Infrasctruture.Repositories.@interface;
 using Carteiras_Digitais.Shared.Dtos;
 
 namespace Carteiras_Digitais.Application.Services
@@ -21,7 +21,7 @@ namespace Carteiras_Digitais.Application.Services
             this.passwordService = new PasswordService();
         }
 
-        public async Task<Guid> CreateUserAndWallet(UserDto userDto)
+        public async Task<Guid?> CreateUserAndWallet(UserDto userDto)
         {
             var userExists = await userRepositories.FindUserByEmail(userDto.Email);
 

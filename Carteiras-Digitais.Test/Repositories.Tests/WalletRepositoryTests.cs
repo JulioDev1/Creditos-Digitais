@@ -1,15 +1,11 @@
 ﻿using AutoFixture;
-using Carteiras_Digitais.Api.Domain.Models;
+using Carteiras_Digitais.Core.Domain.Models;
 using Carteiras_Digitais.Infrasctruture.Repositories;
-using Carteiras_Digitais.Test.Repositories.Database;
+using Carteiras_Digitais.Test.Repositories.Tests.Database;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Carteiras_Digitais.Test.Repositories
+
+namespace Carteiras_Digitais.Test.Repositories.Tests
 {
     public class WalletRepositoryTests
     {
@@ -17,7 +13,7 @@ namespace Carteiras_Digitais.Test.Repositories
 
         public WalletRepositoryTests()
         {
-            this.fixture = new Fixture();
+            fixture = new Fixture();
             fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
