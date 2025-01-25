@@ -47,5 +47,25 @@ namespace Carteiras_Digitais.Test.Services.Tests
 
             await action.Should().ThrowAsync<Exception>();
         }
+        [Fact]
+        public async Task ShouldBeReturnErrorWhenPasswordNotMatch()
+        {
+            var InputPasswordIncorrect = fixture.Create<LoginDto>();
+            
+            var userWasFound = fixture.Build<User>()
+                .With(u => u.Email, InputPasswordIncorrect.Email)
+                .Create();
+
+            userRepository.Setup(r => r.FindUserByEmail(InputPasswordIncorrect.Email))
+                .ReturnsAsync((userWasFound));
+
+            passwordService.Setup(p => p.Compare(InputPasswordIncorrect.Password, userWasFound.Password)).Returns(false);
+            
+            var authenticationService = new AuthService(userRepository.Object, passwordService.Object);
+
+            Func<Task> action = async () => await authenticationService.AuthenticateUser(InputPasswordIncorrect);
+
+            await action.Should().ThrowAsync<Exception>("incorrectly Password");
+        }
     }
 }
