@@ -12,10 +12,12 @@ namespace Carteiras_Digitais.Application.Services
     public class WalletService : IWallletService
     {
         private readonly IWalletRepository walletRepository;
+        private readonly IUserService userService;
 
-        public WalletService(IWalletRepository walletRepository)
+        public WalletService(IWalletRepository walletRepository, IUserService userService)
         {
             this.walletRepository = walletRepository;
+            this.userService = userService;
         }
 
         public async Task<Guid> CreateWallet(Wallet wallet)
@@ -24,6 +26,11 @@ namespace Carteiras_Digitais.Application.Services
         }
 
         public Task<decimal> DepositBalanceToWallet(Guid Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<decimal> GetUserBalanceWallet(Guid Id)
         {
             throw new NotImplementedException();
         }

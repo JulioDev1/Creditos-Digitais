@@ -49,5 +49,10 @@ namespace Carteiras_Digitais.Application.Services
 
             return createUser;
         }
+
+        public async Task<User> GetUserById(Guid Id)
+        {
+            return await userRepositories.GetUserById(Id);
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace Carteiras_Digitais.Core.Domain.Interfaces
     {
         Task<Guid> CreateWallet(Wallet wallet);
         Task<decimal> DepositBalanceToWallet(Guid Id);
+        Task<decimal> GetUserBalanceWallet(Guid Id);
     }
 }
