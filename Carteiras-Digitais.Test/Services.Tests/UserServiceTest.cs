@@ -13,14 +13,14 @@ namespace Carteiras_Digitais.Test.Services.Tests
     public class UserServiceTest
     {
         private readonly Mock<IUserRepositories> userRepository;
-        private readonly Mock<IWalletRepository> walletRepository;
+        private readonly Mock<IWallletService> walletService;
         private readonly IPasswordService passwordService;
         private readonly Fixture fixture;
 
         public UserServiceTest()
         {
             userRepository = new Mock<IUserRepositories>();
-            walletRepository = new Mock<IWalletRepository>();
+            walletService = new Mock<IWallletService>();
             fixture = new Fixture();
             fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());
@@ -37,9 +37,9 @@ namespace Carteiras_Digitais.Test.Services.Tests
             userRepository.Setup(r => r.FindUserByEmail(InputUserRegister.Email))
                 .ReturnsAsync(new User { Email = InputUserRegister.Email });
 
-            walletRepository.Setup(w => w.CreateWallet(WalletUser)).ReturnsAsync(WalletUser.Id);
+            walletService.Setup(w => w.CreateWallet(WalletUser)).ReturnsAsync(WalletUser.Id);
 
-            var userService = new UserService(userRepository.Object, walletRepository.Object);
+            var userService = new UserService(userRepository.Object, walletService.Object);
 
             var InputError = fixture.Build<UserDto>()
                 .With(u => u.Email, InputUserRegister.Email)
@@ -50,7 +50,7 @@ namespace Carteiras_Digitais.Test.Services.Tests
 
             Func<Task> action = async () => await userService.CreateUserAndWallet(InputError);
 
-            await action.Should().ThrowAsync<KeyNotFoundException>();
+            await action.Should().ThrowAsync<UnauthorizedAccessException>();
         }
         [Fact]
         public async Task ShouldBeReturnUserInSuccessCase()
@@ -70,9 +70,9 @@ namespace Carteiras_Digitais.Test.Services.Tests
 
             userRepository.Setup(r => r.CreateUserDatabase(It.IsAny<User>())).ReturnsAsync(InputUserRegister.Id);
 
-            walletRepository.Setup(w => w.CreateWallet(WalletUser)).ReturnsAsync(WalletUser.Id);
+            walletService.Setup(w => w.CreateWallet(WalletUser)).ReturnsAsync(WalletUser.Id);
 
-            var userService = new UserService(userRepository.Object, walletRepository.Object);
+            var userService = new UserService(userRepository.Object, walletService.Object);
 
             var action = await userService.CreateUserAndWallet(InputSuccess);
 

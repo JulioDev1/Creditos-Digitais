@@ -28,18 +28,17 @@ namespace Carteiras_Digitais.Api.Controllers
                     Password = userDto.Password,
                 };
 
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
                 var userAccountCreated = await userService.CreateUserAndWallet(AddUserData);
 
                 return userAccountCreated;
             }
+            catch(UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
+            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return StatusCode(500, new { Error = "An unexpected error occurred.", Details = ex.Message });
             }
         }
     }

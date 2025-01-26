@@ -10,15 +10,15 @@ namespace Carteiras_Digitais.Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepositories userRepositories;
-        private readonly IWalletRepository walletRepository;
+        private readonly IWallletService walletService;
         private readonly IPasswordService passwordService;
 
 
-        public UserService(IUserRepositories userRepositories, IWalletRepository walletRepository)
+        public UserService(IUserRepositories userRepositories, IWallletService walletService)
         {
             this.userRepositories = userRepositories;
-            this.walletRepository = walletRepository;
             this.passwordService = new PasswordService();
+            this.walletService = walletService;
         }
 
         public async Task<Guid?> CreateUserAndWallet(UserDto userDto)
@@ -26,7 +26,7 @@ namespace Carteiras_Digitais.Application.Services
             var userExists = await userRepositories.FindUserByEmail(userDto.Email);
 
             if (userExists is not null) {
-                throw new Exception("user already exists");
+                throw new UnauthorizedAccessException("user already exists");
             }
 
             userDto.Password = passwordService.Hasher(userDto.Password);
@@ -45,7 +45,7 @@ namespace Carteiras_Digitais.Application.Services
                 UserId = createUser
             };
 
-            await walletRepository.CreateWallet(createUserWallet);
+            await walletService.CreateWallet(createUserWallet);
 
             return createUser;
         }
