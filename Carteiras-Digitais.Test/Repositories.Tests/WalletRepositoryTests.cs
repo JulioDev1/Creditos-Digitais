@@ -48,6 +48,7 @@ namespace Carteiras_Digitais.Test.Repositories.Tests
             var UserRepository = new UserRepository(context);
 
             var userMock = fixture.Create<User>();
+         
             var walletMock = fixture.Build<Wallet>()
                 .With(w=> w.Id, userMock.wallet!.Id)
                 .With(w => w.UserId, userMock.Id)
@@ -65,6 +66,43 @@ namespace Carteiras_Digitais.Test.Repositories.Tests
             getUserWalletBalance.Balance.Should().Be(300);
 
             getUserWalletBalance.UserId.Should().Be(userMock.Id);
+
+        }
+        [Fact]
+        public async Task ShouldBeDecreaseBalanceAccount()
+        {
+
+            var context = AppDbContextFactory.CreateInMemoryDbContext();
+
+            var WalletRepository = new WalletRepository(context);
+
+            var UserRepository = new UserRepository(context);
+
+            var userMock = fixture.Create<User>();
+
+            var walletMock = fixture.Build<Wallet>()
+                .With(w => w.Id, userMock.wallet!.Id)
+                .With(w => w.UserId, userMock.Id)
+                .With(w => w.Balance, 300).Create();
+
+            var walletMockDecrease = fixture.Build<Wallet>()
+                .With(w => w.Id, userMock.wallet!.Id)
+                .With(w => w.UserId, userMock.Id)
+                .With(w => w.Balance, 0).Create();
+
+            var UserCreated = await UserRepository.CreateUserDatabase(userMock);
+
+            var walletBalanceIncrease = await WalletRepository.IncreaseBalanceWallet(walletMock);
+
+            var walletBalanceDecrease = await WalletRepository.DecreaseBalanceWallet(walletMock);
+           
+            var getUserWalletBalance = await WalletRepository.GetUserWallet(userMock.Id);
+
+            walletBalanceDecrease.Id.Should().Be(walletMock.Id);
+
+            getUserWalletBalance.Balance.Should().Be(300);
+
+            walletBalanceDecrease.UserId.Should().Be(userMock.Id);
 
         }
     }
