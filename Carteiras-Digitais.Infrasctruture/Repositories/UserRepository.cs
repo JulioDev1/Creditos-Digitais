@@ -27,5 +27,10 @@ namespace Carteiras_Digitais.Infrasctruture.Repositories
         {
            return await context.users.FirstOrDefaultAsync(e=> e.Email == email);
         }
+
+        public async Task<User> GetUserById(Guid Id)
+        {
+            return await context.users.FirstAsync(u=> u.Id == Id);
+        }
     }
 }

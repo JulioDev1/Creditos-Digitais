@@ -11,5 +11,7 @@ namespace Carteiras_Digitais.Infrasctruture.Repositories.@interface
     {
         Task<Guid> CreateUserDatabase(User user);
         Task<User?> FindUserByEmail(string email);
+        Task<User> GetUserById(Guid id);
+
     }
 }
