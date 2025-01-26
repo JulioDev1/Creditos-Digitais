@@ -40,7 +40,24 @@ namespace Carteiras_Digitais.Test.Services.Tests
             var action = await walletService.GetUserBalanceWallet(Wallet.Id);  
 
             action.Should().Be(Wallet);
+        }
 
+        [Fact]
+        public async Task ShouldReturnIncreaseValue()
+        {
+            var Deposit = fixture.Create<BalanceDto>();
+            var WalletSuccess = fixture.Build<Wallet>()
+                .With(w => w.Balance, Deposit.Balance)
+                .With(w => w.UserId, Deposit.UserId)
+                .Create();
+
+            walletRepository.Setup(w => w.IncreaseBalanceWallet(It.IsAny<Wallet>())).ReturnsAsync(WalletSuccess);
+
+            var walletService = new WalletService(walletRepository.Object);
+
+            var actionService = await walletService.DepositBalanceToWallet(Deposit);
+
+            actionService.Id.Should().Be(WalletSuccess.Id);  
         }
     }
 }
