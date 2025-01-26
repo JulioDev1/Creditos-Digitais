@@ -56,7 +56,6 @@ namespace Carteiras_Digitais.Test.Repositories.Tests
 
             var UserCreated = await UserRepository.CreateUserDatabase(userMock);
 
-        
             var walletBalanceIncrease = await WalletRepository.IncreaseBalanceWallet(walletMock);
 
             var getUserWalletBalance = await WalletRepository.GetUserWallet(userMock.Id);
@@ -94,14 +93,14 @@ namespace Carteiras_Digitais.Test.Repositories.Tests
 
             var walletBalanceIncrease = await WalletRepository.IncreaseBalanceWallet(walletMock);
 
-            var walletBalanceDecrease = await WalletRepository.DecreaseBalanceWallet(walletMock);
+            var walletBalanceDecrease = await WalletRepository.DecreaseBalanceWallet(walletMockDecrease);
            
             var getUserWalletBalance = await WalletRepository.GetUserWallet(userMock.Id);
 
             walletBalanceDecrease.Id.Should().Be(walletMock.Id);
 
-            getUserWalletBalance.Balance.Should().Be(300);
-
+            getUserWalletBalance.Balance.Should().Be(0);
+        
             walletBalanceDecrease.UserId.Should().Be(userMock.Id);
 
         }
