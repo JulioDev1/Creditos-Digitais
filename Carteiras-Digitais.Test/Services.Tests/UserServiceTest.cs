@@ -79,5 +79,20 @@ namespace Carteiras_Digitais.Test.Services.Tests
             action.Should().Be(InputUserRegister.Id);
 
         }
+        [Fact]
+        public async Task ShouldBeReturnUserById()
+        {
+
+            var InputSuccess = fixture.Build<User>().Create();
+
+            userRepository.Setup(r => r.GetUserById(InputSuccess.Id)).ReturnsAsync(InputSuccess);
+
+            var userService = new UserService(userRepository.Object, walletService.Object);
+
+            var action = await userService.GetUserById(InputSuccess.Id);
+
+            action.Id.Should().Be(InputSuccess.Id);
+
+        }
     }
 }
