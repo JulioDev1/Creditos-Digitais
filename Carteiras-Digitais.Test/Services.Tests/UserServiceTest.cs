@@ -92,7 +92,8 @@ namespace Carteiras_Digitais.Test.Services.Tests
             var action = await userService.GetUserById(InputSuccess.Id);
 
             action.Id.Should().Be(InputSuccess.Id);
-
+            
+            
         }
     }
 }
