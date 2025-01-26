@@ -50,7 +50,7 @@ namespace Carteiras_Digitais.Test.Services.Tests
 
             Func<Task> action = async () => await userService.CreateUserAndWallet(InputError);
 
-            await action.Should().ThrowAsync<Exception>();
+            await action.Should().ThrowAsync<KeyNotFoundException>();
         }
         [Fact]
         public async Task ShouldBeReturnUserInSuccessCase()
