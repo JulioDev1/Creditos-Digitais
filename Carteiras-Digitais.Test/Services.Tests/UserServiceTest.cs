@@ -13,14 +13,14 @@ namespace Carteiras_Digitais.Test.Services.Tests
     public class UserServiceTest
     {
         private readonly Mock<IUserRepositories> userRepository;
-        private readonly Mock<IWallletService> walletService;
+        private readonly Mock<IWalletService> walletService;
         private readonly IPasswordService passwordService;
         private readonly Fixture fixture;
 
         public UserServiceTest()
         {
             userRepository = new Mock<IUserRepositories>();
-            walletService = new Mock<IWallletService>();
+            walletService = new Mock<IWalletService>();
             fixture = new Fixture();
             fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());

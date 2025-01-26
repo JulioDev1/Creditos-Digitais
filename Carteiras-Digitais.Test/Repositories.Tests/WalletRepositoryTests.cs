@@ -102,7 +102,6 @@ namespace Carteiras_Digitais.Test.Repositories.Tests
             getUserWalletBalance.Balance.Should().Be(0);
         
             walletBalanceDecrease.UserId.Should().Be(userMock.Id);
-
         }
     }
 }
