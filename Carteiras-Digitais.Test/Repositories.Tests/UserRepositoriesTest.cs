@@ -68,7 +68,27 @@ namespace Carteiras_Digitais.Test.Repositories.Tests
             findingUser.Should().NotBeNull();
 
             userFounded.Should().Be(newUser);
+        }
+        [Fact]
+        public async Task ShouldBeReturnUserDataWhenFoundIdUser()
+        {
+            var context = AppDbContextFactory.CreateInMemoryDbContext();
 
+            var repository = new UserRepository(context);
+
+            var newUser = fixture.Create<User>();
+
+            context.users.Add(newUser);
+
+            await context.SaveChangesAsync();
+
+            var findingUser = await context.users.FirstAsync(u => u.Email == newUser.Email);
+
+            var userFounded = await repository.GetUserById(findingUser.Id);
+
+            findingUser.Should().NotBeNull();
+
+            userFounded.Should().Be(newUser);
         }
     }
 }
