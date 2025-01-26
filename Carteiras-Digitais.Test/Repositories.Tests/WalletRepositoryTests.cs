@@ -19,7 +19,6 @@ namespace Carteiras_Digitais.Test.Repositories.Tests
         }
 
         [Fact]
-
         public async Task ShouldBeCreateWalletAndAttriButteToUser()
         {
             var context = AppDbContextFactory.CreateInMemoryDbContext();
@@ -37,6 +36,36 @@ namespace Carteiras_Digitais.Test.Repositories.Tests
             var walletCreated = await WalletRepository.CreateWallet(walletMock);
 
             walletCreated.Should().Be(walletMock.Id);
+        }
+        [Fact]
+        public async Task ShouldBeIncreaseBalanceAccount()
+        {
+
+            var context = AppDbContextFactory.CreateInMemoryDbContext();
+
+            var WalletRepository = new WalletRepository(context);
+
+            var UserRepository = new UserRepository(context);
+
+            var userMock = fixture.Create<User>();
+            var walletMock = fixture.Build<Wallet>()
+                .With(w=> w.Id, userMock.wallet!.Id)
+                .With(w => w.UserId, userMock.Id)
+                .With(w=> w.Balance, 300).Create();
+
+            var UserCreated = await UserRepository.CreateUserDatabase(userMock);
+
+        
+            var walletBalanceIncrease = await WalletRepository.IncreaseBalanceWallet(walletMock);
+
+            var getUserWalletBalance = await WalletRepository.GetUserWallet(userMock.Id);
+
+            walletBalanceIncrease.Id.Should().Be(walletMock.Id);
+            
+            getUserWalletBalance.Balance.Should().Be(300);
+
+            getUserWalletBalance.UserId.Should().Be(userMock.Id);
+
         }
     }
 }
