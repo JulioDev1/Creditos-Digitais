@@ -14,6 +14,11 @@ namespace Carteiras_Digitais.Infrasctruture.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
             modelBuilder.Entity<Wallet>()
                 .HasOne(w => w.user)                
                 .WithOne(u => u.wallet)           
