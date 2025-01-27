@@ -10,11 +10,11 @@ namespace Carteiras_Digitais.Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepositories userRepositories;
-        private readonly IWallletService walletService;
+        private readonly IWalletService walletService;
         private readonly IPasswordService passwordService;
 
 
-        public UserService(IUserRepositories userRepositories, IWallletService walletService)
+        public UserService(IUserRepositories userRepositories, IWalletService walletService)
         {
             this.userRepositories = userRepositories;
             this.passwordService = new PasswordService();

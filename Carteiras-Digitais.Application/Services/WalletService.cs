@@ -1,23 +1,18 @@
 ﻿using Carteiras_Digitais.Core.Domain.Interfaces;
 using Carteiras_Digitais.Core.Domain.Models;
 using Carteiras_Digitais.Infrasctruture.Repositories.@interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Carteiras_Digitais.Shared.Dtos;
+
 
 namespace Carteiras_Digitais.Application.Services
 {
-    public class WalletService : IWallletService
+    public class WalletService : IWalletService
     {
         private readonly IWalletRepository walletRepository;
-        private readonly IUserService userService;
 
-        public WalletService(IWalletRepository walletRepository, IUserService userService)
+        public WalletService(IWalletRepository walletRepository)
         {
             this.walletRepository = walletRepository;
-            this.userService = userService;
         }
 
         public async Task<Guid> CreateWallet(Wallet wallet)
@@ -25,14 +20,35 @@ namespace Carteiras_Digitais.Application.Services
             return await walletRepository.CreateWallet(wallet);
         }
 
-        public Task<decimal> DepositBalanceToWallet(Guid Id)
+        public async Task<Wallet> DepositBalanceToWallet(BalanceDto deposit)
         {
-            throw new NotImplementedException();
+            var WalletDeposit = new Wallet
+            {
+                UserId = deposit.UserId,
+                Balance = deposit.Balance,
+            };
+
+            var  updateBalance = await  walletRepository.IncreaseBalanceWallet(WalletDeposit);
+            
+            return updateBalance;
         }
 
-        public Task<decimal> GetUserBalanceWallet(Guid Id)
+        public async Task<Wallet> DiscountBalanceToWallet(BalanceDto discount)
         {
-            throw new NotImplementedException();
+            var WalletDeposit = new Wallet
+            {
+                UserId = discount.UserId,
+                Balance = discount.Balance,
+            };
+
+            await walletRepository.DecreaseBalanceWallet(WalletDeposit);
+
+            return WalletDeposit;
+        }
+
+        public async Task<Wallet?> GetUserBalanceWallet(Guid Id)
+        {
+            return await walletRepository.GetUserWallet(Id);
         }
     }
 }
