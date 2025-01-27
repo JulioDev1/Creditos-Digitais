@@ -45,7 +45,9 @@ namespace Carteiras_Digitais.Test.Controller.Tests
             var result = await controller.DepositBalanceInUserAccount(100);
 
             result.Should().BeOfType<UnauthorizedObjectResult>();
+            
             var UnauthorizedError = result as UnauthorizedObjectResult;
+
             UnauthorizedError!.Value.Should().Be("user not logged");
         }
     }

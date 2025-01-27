@@ -47,22 +47,27 @@ namespace Carteiras_Digitais.Test.Repositories.Tests
 
             var UserRepository = new UserRepository(context);
 
-            var userMock = fixture.Create<User>();
+            var userMock = fixture.Build<User>()
+                .Without(w=> w.Id)
+                .Create();
          
-            var walletMock = fixture.Build<Wallet>()
-                .With(w=> w.Id, userMock.wallet!.Id)
-                .With(w => w.UserId, userMock.Id)
-                .With(w=> w.Balance, 300).Create();
-
             var UserCreated = await UserRepository.CreateUserDatabase(userMock);
+
+            var walletMock = fixture.Build<Wallet>()
+                .With(w=> w.Id, UserCreated)
+                .With(w=> w.Balance, 0)
+                .With(w => w.UserId, userMock.Id)
+                .Create();
+
+            await WalletRepository.IncreaseBalanceWallet(walletMock);
 
             var walletBalanceIncrease = await WalletRepository.IncreaseBalanceWallet(walletMock);
 
-            var getUserWalletBalance = await WalletRepository.GetUserWallet(userMock.Id);
+            var getUserWalletBalance = await WalletRepository.GetUserWallet(UserCreated);
 
-            walletBalanceIncrease.Id.Should().Be(walletMock.Id);
-            
-            getUserWalletBalance.Balance.Should().Be(300);
+            walletBalanceIncrease.Id.Should().Be(getUserWalletBalance.Id);
+
+            walletBalanceIncrease.Balance.Should().Be(userMock.wallet!.Balance);
 
             getUserWalletBalance.UserId.Should().Be(userMock.Id);
 
@@ -77,29 +82,26 @@ namespace Carteiras_Digitais.Test.Repositories.Tests
 
             var UserRepository = new UserRepository(context);
 
-            var userMock = fixture.Create<User>();
 
-            var walletMock = fixture.Build<Wallet>()
-                .With(w => w.Id, userMock.wallet!.Id)
-                .With(w => w.UserId, userMock.Id)
-                .With(w => w.Balance, 300).Create();
-
-            var walletMockDecrease = fixture.Build<Wallet>()
-                .With(w => w.Id, userMock.wallet!.Id)
-                .With(w => w.UserId, userMock.Id)
-                .With(w => w.Balance, 0).Create();
+            var userMock = fixture.Build<User>()
+                .Without(w => w.Id)
+                .Create();
 
             var UserCreated = await UserRepository.CreateUserDatabase(userMock);
 
-            var walletBalanceIncrease = await WalletRepository.IncreaseBalanceWallet(walletMock);
+            var walletMock = fixture.Build<Wallet>()
+                .Without(w => w.Id)
+                .With(w => w.Balance, 0)
+                .With(w => w.UserId, userMock.Id)
+                .Create();
 
-            var walletBalanceDecrease = await WalletRepository.DecreaseBalanceWallet(walletMockDecrease);
+            var walletBalanceDecrease = await WalletRepository.DecreaseBalanceWallet(walletMock);
            
             var getUserWalletBalance = await WalletRepository.GetUserWallet(userMock.Id);
 
-            walletBalanceDecrease.Id.Should().Be(walletMock.Id);
+            walletBalanceDecrease.Id.Should().Be(getUserWalletBalance.Id);
 
-            getUserWalletBalance.Balance.Should().Be(0);
+            getUserWalletBalance.Balance.Should().Be(userMock.wallet!.Balance);
         
             walletBalanceDecrease.UserId.Should().Be(userMock.Id);
         }
