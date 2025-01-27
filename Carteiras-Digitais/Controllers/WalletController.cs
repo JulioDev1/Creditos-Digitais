@@ -19,7 +19,33 @@ namespace Carteiras_Digitais.Api.Controllers
         }
         [HttpPatch("/deposit-balance")]
         [Authorize]
-        public async Task<ActionResult> DepositBalanceInUserAccount(decimal balance)
+        public async Task<ActionResult> DepositBalanceInUserAccount([FromBody] decimal balance)
+        {
+            try
+            {
+                var Id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(Id))
+                {
+                    return Unauthorized("user not logged");
+                }
+
+                var userId = Guid.Parse(Id);
+
+                var deposit = new BalanceDto(balance, userId);
+
+                var wallet = await walletService.DepositBalanceToWallet(deposit);
+
+                return Ok(wallet);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("/get-user-balance")]
+        [Authorize]
+        public async Task<ActionResult> GetUserWalletById()
         {
             try
             {
@@ -31,10 +57,9 @@ namespace Carteiras_Digitais.Api.Controllers
                 }
 
                 var userId = Guid.Parse(Id.Value);
-                
-                var deposit = new BalanceDto(balance, userId);
-                
-                var wallet = await walletService.DepositBalanceToWallet(deposit);
+
+
+                var wallet = await walletService.GetUserBalanceWallet(userId);
 
                 return Ok(wallet);
             }
