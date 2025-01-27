@@ -46,6 +46,7 @@ namespace Carteiras_Digitais.Test.Services.Tests
         public async Task ShouldReturnIncreaseValue()
         {
             var Deposit = fixture.Create<BalanceDto>();
+
             var WalletSuccess = fixture.Build<Wallet>()
                 .With(w => w.Balance, Deposit.Balance)
                 .With(w => w.UserId, Deposit.UserId)
@@ -57,8 +58,28 @@ namespace Carteiras_Digitais.Test.Services.Tests
 
             var actionService = await walletService.DepositBalanceToWallet(Deposit);
 
-            actionService.Id.Should().Be(WalletSuccess.Id);
             actionService.Should().Be(WalletSuccess);
+        }
+        [Fact]
+        public async Task ShouldReturnDecreaseValue()
+        {
+            var Deposit = fixture.Build<BalanceDto>().With(d=> d.Balance, 0).Create();
+
+            var WalletSuccess = fixture.Build<Wallet>()
+              
+                .With(w => w.Balance, Deposit.Balance)
+                .With(w => w.UserId, Deposit.UserId)
+                .Create();
+
+
+            walletRepository.Setup(w => w.DecreaseBalanceWallet(It.IsAny<Wallet>())).ReturnsAsync(WalletSuccess);
+
+            var walletService = new WalletService(walletRepository.Object);
+
+            var actionService = await walletService.DiscountBalanceToWallet(Deposit);
+
+            actionService.UserId.Should().Be(WalletSuccess.UserId);
+            actionService.Balance.Should().Be(WalletSuccess.Balance);
 
         }
     }
