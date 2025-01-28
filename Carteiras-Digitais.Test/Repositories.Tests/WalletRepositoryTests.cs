@@ -82,7 +82,6 @@ namespace Carteiras_Digitais.Test.Repositories.Tests
 
             var UserRepository = new UserRepository(context);
 
-
             var userMock = fixture.Build<User>()
                 .Without(w => w.Id)
                 .Create();
