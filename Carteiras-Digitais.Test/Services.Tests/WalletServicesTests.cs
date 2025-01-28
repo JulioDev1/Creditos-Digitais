@@ -79,6 +79,7 @@ namespace Carteiras_Digitais.Test.Services.Tests
             var actionService = await walletService.DiscountBalanceToWallet(Deposit);
 
             actionService.UserId.Should().Be(WalletSuccess.UserId);
+
             actionService.Balance.Should().Be(WalletSuccess.Balance);
 
         }
