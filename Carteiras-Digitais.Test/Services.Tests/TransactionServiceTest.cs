@@ -42,5 +42,43 @@ namespace Carteiras_Digitais.Test.Services.Tests
 
             await action.Should().ThrowAsync<KeyNotFoundException>();
         }
+
+        [Fact]
+        public async Task ShouldBeBalanceMoreExpensive()
+        {
+            var receiverWallet =
+                new Wallet
+                {
+                    Id = Guid.NewGuid(),
+                    Balance = 0,
+                    UserId = Guid.NewGuid(),
+
+                };
+            var senderWallet =
+                 new Wallet
+                 {
+                     Id = Guid.NewGuid(),
+                     Balance = 0,
+                     UserId = Guid.NewGuid(),
+
+                 };
+            var balance = 
+                new TransactionDto
+                {
+                    Amount =300,
+                    ReceiverWalletId = receiverWallet.Id,
+                    SenderWalletId = senderWallet.Id,
+                };
+
+            walletService.Setup((w => w.GetUserBalanceWallet(receiverWallet.Id))).ReturnsAsync(receiverWallet);
+
+            walletService.Setup((w => w.GetUserBalanceWallet(senderWallet.Id))).ReturnsAsync(senderWallet);
+
+            var service = new TransactionService(transactionRepository.Object, walletService.Object);
+
+            Func<Task> action = async () => await service.TransactionToBalanceToReceiver(balance);
+
+            await action.Should().ThrowAsync<InvalidOperationException>();
+        }
     }
 }
