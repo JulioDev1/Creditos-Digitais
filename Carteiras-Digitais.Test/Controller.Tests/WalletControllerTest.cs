@@ -78,18 +78,13 @@ namespace Carteiras_Digitais.Test.Controller.Tests
 
             var balance = new BalanceDto(100,user.Id);
 
-            Console.WriteLine("aqui" + token);
-
             var controller = new WalletController(serviceMock.Object)
             {
                 ControllerContext = new ControllerContext
                 {
                     HttpContext = new DefaultHttpContext
                     {
-                        User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-                }, "mock"))
+                        User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]{}, "mock"))
                     }
                 }
             };
@@ -112,6 +107,6 @@ namespace Carteiras_Digitais.Test.Controller.Tests
             
             resultObject.Value.Should().Be(wallet);
         }
-
+       
     }
 }

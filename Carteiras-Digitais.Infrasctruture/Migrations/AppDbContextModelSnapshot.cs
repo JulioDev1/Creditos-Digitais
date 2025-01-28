@@ -31,8 +31,10 @@ namespace Carteiras_Digitais.Infrasctruture.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -48,6 +50,26 @@ namespace Carteiras_Digitais.Infrasctruture.Migrations
                     b.HasIndex("SenderWalletId");
 
                     b.ToTable("transactions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("e2c20c25-36f6-4c64-ac7b-34e016fa2bd0"),
+                            Amount = 100m,
+                            CreatedAt = new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "testSender quantity 100$ to userTest",
+                            ReceiverWalletId = new Guid("7f9efaa3-f0a3-4364-aa8a-816ab961f462"),
+                            SenderWalletId = new Guid("bbfe0b99-4d14-4b69-a533-25be66975947")
+                        },
+                        new
+                        {
+                            Id = new Guid("2c8822d8-425e-44f2-85f9-8ad17566848a"),
+                            Amount = 100m,
+                            CreatedAt = new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "userSender quantity 100$ to userTest",
+                            ReceiverWalletId = new Guid("bbfe0b99-4d14-4b69-a533-25be66975947"),
+                            SenderWalletId = new Guid("7f9efaa3-f0a3-4364-aa8a-816ab961f462")
+                        });
                 });
 
             modelBuilder.Entity("Carteiras_Digitais.Core.Domain.Models.User", b =>
@@ -74,6 +96,22 @@ namespace Carteiras_Digitais.Infrasctruture.Migrations
                         .IsUnique();
 
                     b.ToTable("users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("60935b2a-f96e-412e-bdab-025a97dfe67f"),
+                            Email = "test@mail.com",
+                            Name = "testName",
+                            Password = "$2b$10$MEZct3NsWZdlHHwyBHrzUOYNs6FCZA4X1.JoSO7EYYI3F4uOIow7W"
+                        },
+                        new
+                        {
+                            Id = new Guid("8f653fb3-f868-4fe3-b22e-8d68c659d2d8"),
+                            Email = "user@mail.com",
+                            Name = "userName",
+                            Password = "$2b$10$FbLO2voKSkzimBkf0z66oOBQ6jo99N/Y4b5RaDuOrIBAjNJr3OCxG"
+                        });
                 });
 
             modelBuilder.Entity("Carteiras_Digitais.Core.Domain.Models.Wallet", b =>
@@ -85,6 +123,11 @@ namespace Carteiras_Digitais.Infrasctruture.Migrations
                     b.Property<decimal>("Balance")
                         .HasColumnType("numeric");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
@@ -94,6 +137,22 @@ namespace Carteiras_Digitais.Infrasctruture.Migrations
                         .IsUnique();
 
                     b.ToTable("wallets");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("bbfe0b99-4d14-4b69-a533-25be66975947"),
+                            Balance = 100m,
+                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = new Guid("60935b2a-f96e-412e-bdab-025a97dfe67f")
+                        },
+                        new
+                        {
+                            Id = new Guid("7f9efaa3-f0a3-4364-aa8a-816ab961f462"),
+                            Balance = 100m,
+                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = new Guid("8f653fb3-f868-4fe3-b22e-8d68c659d2d8")
+                        });
                 });
 
             modelBuilder.Entity("Carteiras_Digitais.Core.Domain.Models.Transaction", b =>

@@ -1,4 +1,5 @@
 ﻿using Carteiras_Digitais.Core.Domain.Models;
+using Carteiras_Digitais.Shared.Helper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Carteiras_Digitais.Infrasctruture.Database
@@ -12,9 +13,11 @@ namespace Carteiras_Digitais.Infrasctruture.Database
         public DbSet<Wallet> wallets { get; set; }
         public DbSet<Transaction> transactions { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
@@ -24,12 +27,16 @@ namespace Carteiras_Digitais.Infrasctruture.Database
                 .WithOne(u => u.wallet)           
                 .HasForeignKey<Wallet>(w => w.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
-
+            
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.Wallet)
                 .WithMany(w=> w.Transactions)
                 .HasForeignKey(t => t.SenderWalletId)
                 .IsRequired();
+            
+            modelBuilder.Entity<Transaction>()
+                .Property(e => e.CreatedAt)
+                .HasDefaultValueSql("now()");
         }
     }
 }

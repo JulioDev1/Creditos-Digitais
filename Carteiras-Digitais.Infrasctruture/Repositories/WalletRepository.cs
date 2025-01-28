@@ -33,7 +33,7 @@ namespace Carteiras_Digitais.Infrasctruture.Repositories
         {
             var entities = context.wallets.Where(w => w.UserId == wallet.UserId).First();
 
-            entities.Balance =- wallet.Balance;
+            entities.Balance -= wallet.Balance;
 
             await context.SaveChangesAsync();
 
@@ -45,7 +45,7 @@ namespace Carteiras_Digitais.Infrasctruture.Repositories
         {
             var entities = context.wallets.Where(w => w.UserId == wallet.UserId).First();
 
-             entities.Balance =+ wallet.Balance;
+             entities.Balance += wallet.Balance;
             
             await context.SaveChangesAsync();
            

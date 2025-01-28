@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Carteiras-Digitais.Api\Carteiras-Digitais.Core.csproj" />
+    <ProjectReference Include="..\Carteiras-Digitais.Shared\Carteiras-Digitais.Shared.csproj" />
   </ItemGroup>
 
 </Project>

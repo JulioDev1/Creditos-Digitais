@@ -13,7 +13,5 @@ namespace Carteiras_Digitais.Core.Domain.Models
         public Guid UserId { get; set; }
         public User? user { get; set; }
         public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
-        public DateTime CreatedAt { get; } = DateTime.Now;
-
     }
 }

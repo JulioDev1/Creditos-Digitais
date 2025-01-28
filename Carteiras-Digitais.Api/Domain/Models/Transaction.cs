@@ -7,7 +7,7 @@
         public string? Description { get; set; }
         public Guid SenderWalletId { get; set; }
         public Guid ReceiverWalletId { get; set; }
-        public required Wallet Wallet { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public Wallet ? Wallet { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
