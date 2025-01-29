@@ -32,7 +32,7 @@ namespace Carteiras_Digitais.Test.Controller.Tests
         }
 
         [Fact]
-        public async Task ShouldBeErrorKeyNotFound()
+        public async Task ShouldBeInvalidOperationInterceptor()
         {
             var login = new LoginDto
             {
@@ -60,18 +60,58 @@ namespace Carteiras_Digitais.Test.Controller.Tests
             };
             
             serviceMock.Setup(w => w.TransactionToBalanceToReceiver(It.IsAny<TransactionDto>()))
-                .ThrowsAsync(new KeyNotFoundException("user not exists"));
+                .ThrowsAsync(new InvalidOperationException("value insuficient"));
 
             var transaction = fixture.Create<TransactionDto>();
 
             var result = await controller.TransactionBetweenUsers(transaction);
            
+            result.Should().BeOfType<UnauthorizedObjectResult>();
+
+            var resultAsObject = result as UnauthorizedObjectResult;
+
+            resultAsObject!.Value.Should().Be("value insuficient");
+        }
+        [Fact]
+        public async Task ShouldBeErrorKeyNotFound()
+        {
+            var login = new LoginDto
+            {
+                Email = "test@mail.com",
+                Password = "test"
+
+            };
+
+            var user = fixture.Build<User>()
+                .With(u => u.Email, login.Email)
+                .With(u => u.Password, login.Password)
+                .Create();
+
+            var controller = new TransactionController(serviceMock.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext
+                    {
+                        User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]{ new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                        }, "mock"))
+                    }
+
+                }
+            };
+
+            serviceMock.Setup(w => w.TransactionToBalanceToReceiver(It.IsAny<TransactionDto>()))
+                .ThrowsAsync(new KeyNotFoundException("user not exists"));
+
+            var transaction = fixture.Create<TransactionDto>();
+
+            var result = await controller.TransactionBetweenUsers(transaction);
+
             result.Should().BeOfType<NotFoundObjectResult>();
 
             var resultAsObject = result as NotFoundObjectResult;
 
             resultAsObject!.Value.Should().Be("user not exists");
-
 
         }
 
