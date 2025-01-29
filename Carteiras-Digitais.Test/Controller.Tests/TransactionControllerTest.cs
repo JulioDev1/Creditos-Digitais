@@ -30,8 +30,9 @@ namespace Carteiras_Digitais.Test.Controller.Tests
             fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
+
         [Fact]
-        public async Task ShouldBeReturnSuccessAndTransaction()
+        public async Task ShouldBeReturnSuccessUserTransaction()
         {
             var login = new LoginDto
             {
@@ -70,6 +71,62 @@ namespace Carteiras_Digitais.Test.Controller.Tests
             var resultAsObject = result as OkObjectResult;
 
             resultAsObject!.Value.Should().Be(transaction);
+        }
+
+        [Fact]
+        public async Task ShouldBeReturnSuccessAndTransaction()
+        {
+            var login = new LoginDto
+            {
+                Email = "test@mail.com",
+                Password = "test"
+
+            };
+
+            var user = fixture.Build<User>()
+                .With(u => u.Email, login.Email)
+                .With(u => u.Password, login.Password)
+                .Create();
+
+            var controller = new TransactionController(serviceMock.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext
+                    {
+                        User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]{ new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                        }, "mock"))
+                    }
+
+                }
+            };
+            var transaction = fixture.Create<FilterTransactionDto>();
+
+            var wallet = new Wallet
+            {
+                Id = Guid.NewGuid(),
+                Balance = 0,
+                UserId = transaction.userId,
+            };
+
+            var transactions = new List<TransactionDto>
+            {
+                new TransactionDto { SenderWalletId = wallet.Id, CreatedAt = DateTime.UtcNow.AddDays(-2) },
+                new TransactionDto{ SenderWalletId = wallet.Id, CreatedAt = DateTime.UtcNow.AddDays(-1) },
+                new TransactionDto { SenderWalletId = wallet.Id, CreatedAt = DateTime.UtcNow }
+            };
+
+            serviceMock.Setup(w => w.GetUserAllUserTransactionsWithFilter(It.IsAny<FilterTransactionDto>()))
+                .ReturnsAsync(transactions.ToList());
+
+
+            var result = await controller.TransactionWithFilterOptionalFilter(transaction);
+
+            result.Should().BeOfType<OkObjectResult>();
+
+            var resultAsObject = result as OkObjectResult;
+
+            resultAsObject!.Value.Should().BeEquivalentTo(transactions.ToList());
         }
 
         [Fact]

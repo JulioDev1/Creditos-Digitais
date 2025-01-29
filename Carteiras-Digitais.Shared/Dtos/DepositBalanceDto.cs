@@ -10,7 +10,6 @@ namespace Carteiras_Digitais.Shared.Dtos
     {
         public Guid UserId { get; set; }
         public decimal Balance { get; set; } = 0;
-
         public BalanceDto(decimal balance, Guid userId)
         {
             UserId = userId;
