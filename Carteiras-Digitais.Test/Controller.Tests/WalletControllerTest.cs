@@ -72,7 +72,6 @@ namespace Carteiras_Digitais.Test.Controller.Tests
                 .With(u => u.Password, login.Password)
                 .Create();
 
-            var generateToken = new AuthService(authServiceMock.Object, passwordServiceMock.Object);
             
 
             var balance = new BalanceDto(100,user.Id);
