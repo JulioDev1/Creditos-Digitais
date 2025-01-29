@@ -17,10 +17,25 @@ namespace Carteiras_Digitais.Api.Controllers
         }
 
         [HttpPost("/create-user")]
-        public async Task<ActionResult<Guid?>> CreateUserAccount(UserDto userDto)
+        public async Task<ActionResult> CreateUserAccount(UserDto userDto)
         {
             try
             {
+                if (string.IsNullOrEmpty(userDto.Name)) 
+                { 
+                    return  Unauthorized("name is null");
+                }
+
+                if(string.IsNullOrEmpty(userDto.Email))
+                {
+                    return Unauthorized("email is null");
+                }
+
+                if (string.IsNullOrEmpty(userDto.Password))
+                {
+                    return Unauthorized("password is null");
+                }
+
                 var AddUserData = new UserDto
                 {
                     Email = userDto.Email,
@@ -30,7 +45,7 @@ namespace Carteiras_Digitais.Api.Controllers
 
                 var userAccountCreated = await userService.CreateUserAndWallet(AddUserData);
 
-                return userAccountCreated;
+                return Ok(userAccountCreated);
             }
             catch(UnauthorizedAccessException ex)
             {
