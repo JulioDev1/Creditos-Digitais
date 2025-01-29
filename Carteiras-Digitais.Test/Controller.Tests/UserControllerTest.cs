@@ -6,6 +6,7 @@ using FluentAssertions;
 using Moq;
 using Carteiras_Digitais.Core.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Carteiras_Digitais.Core.Domain.Models;
 
 namespace Carteiras_Digitais.Test.Controller.Tests
 {
@@ -21,18 +22,49 @@ namespace Carteiras_Digitais.Test.Controller.Tests
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
         [Fact]
-        public async Task ShouldReturnCreateUserSuccessEmpty()
+        public async Task ShouldReturnCreateUserSuccess()
         {
             var InputNullPasswordField = fixture.Build<UserDto>()
                 .Create();
 
-            serviceMock.Setup(u => u.CreateUserAndWallet(InputNullPasswordField)).ReturnsAsync((Guid?)null);
+            var IdUser = Guid.NewGuid();
+
+            serviceMock.Setup(u => u.CreateUserAndWallet(It.IsAny<UserDto>())).ReturnsAsync((IdUser));
 
             var userController = new UserController(serviceMock.Object);
 
-            await userController.CreateUserAccount(InputNullPasswordField);
+            var action = await userController.CreateUserAccount(InputNullPasswordField);
 
-            userController.Should().NotBeNull();
+            action.Should().BeOfType<OkObjectResult>();
+
+            var result = action as OkObjectResult;
+
+            result.Should().NotBeNull();
+
+            result.Value.Should().Be(IdUser);
         }
+        [Fact]
+        public async Task ShouldReturnUserAlreadyExists()
+        {
+            var InputNullPasswordField = fixture.Build<UserDto>()
+                .Create();
+
+            var IdUser = Guid.NewGuid();
+
+            serviceMock.Setup(u => u.CreateUserAndWallet(It.IsAny<UserDto>())).ThrowsAsync(new UnauthorizedAccessException("user already exists"));
+
+            var userController = new UserController(serviceMock.Object);
+
+            var result = await userController.CreateUserAccount(InputNullPasswordField);
+
+            result.Should().BeOfType<UnauthorizedObjectResult>();
+
+            var UnauthorizedError = result as UnauthorizedObjectResult;
+
+            UnauthorizedError.Should().NotBeNull();
+
+            UnauthorizedError.Value.Should().Be("user already exists");
+        }
+
     }
 }
