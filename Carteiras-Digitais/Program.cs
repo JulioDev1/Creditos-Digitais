@@ -23,7 +23,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepositories, UserRepository>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IWalletRepository,WalletRepository>();
-builder.Services.AddScoped<IWalletService, WalletService>();    
+builder.Services.AddScoped<IWalletService, WalletService>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<ITransactionService, TransactionService>(); 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddAuthentication(x =>
