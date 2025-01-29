@@ -74,7 +74,6 @@ namespace Carteiras_Digitais.Test.Controller.Tests
 
             var generateToken = new AuthService(authServiceMock.Object, passwordServiceMock.Object);
             
-            var token = generateToken.GenerateAuthToken(user);
 
             var balance = new BalanceDto(100,user.Id);
 
@@ -84,8 +83,10 @@ namespace Carteiras_Digitais.Test.Controller.Tests
                 {
                     HttpContext = new DefaultHttpContext
                     {
-                        User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]{}, "mock"))
+                        User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]{ new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                        }, "mock"))
                     }
+
                 }
             };
 

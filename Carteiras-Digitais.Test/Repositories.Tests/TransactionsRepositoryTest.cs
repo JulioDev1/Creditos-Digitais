@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using Carteiras_Digitais.Core.Domain.Models;
 using Carteiras_Digitais.Infrasctruture.Repositories;
+using Carteiras_Digitais.Shared.Dtos;
 using Carteiras_Digitais.Test.Repositories.Tests.Database;
 using FluentAssertions;
 using System;
@@ -44,12 +45,11 @@ namespace Carteiras_Digitais.Test.Repositories.Tests
 
             var transactionRepository = new TransactionRepository(context);
 
-            var guid = Guid.NewGuid();
-                
-            var transactionRepo = await transactionRepository.GetAllTransactionsUserSender(guid);
+            var filteredArray = fixture.Create<FilterTransactionDto>();
+            
+            var transactionRepo = await transactionRepository.GetAllTransactionsUserSender(filteredArray);
 
-            transactionRepo.Should().BeOfType<List<Transaction>>();
-
+            transactionRepo.Should().BeOfType<List<TransactionDto>>();
         }
     }
 }

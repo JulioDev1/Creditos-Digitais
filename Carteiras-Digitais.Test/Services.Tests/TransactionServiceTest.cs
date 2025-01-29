@@ -2,9 +2,13 @@
 using Carteiras_Digitais.Application.Services;
 using Carteiras_Digitais.Core.Domain.Interfaces;
 using Carteiras_Digitais.Core.Domain.Models;
+using Carteiras_Digitais.Infrasctruture.Database;
 using Carteiras_Digitais.Infrasctruture.Repositories;
 using Carteiras_Digitais.Shared.Dtos;
+using Carteiras_Digitais.Test.Repositories.Tests.Database;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace Carteiras_Digitais.Test.Services.Tests
@@ -34,13 +38,59 @@ namespace Carteiras_Digitais.Test.Services.Tests
                 .With(x => x.Amount, wallet.Balance)
                 .Create();
 
-            var userWalletNotFound = walletService.Setup((w => w.GetUserBalanceWallet(wallet.Id))).ReturnsAsync((Wallet?)null);
+            walletService.Setup((w => w.GetUserBalanceWallet(wallet.Id))).ReturnsAsync((Wallet?)null);
 
             var service = new TransactionService(transactionRepository.Object, walletService.Object);
 
             Func<Task> action = async () => await service.TransactionToBalanceToReceiver(balance);
 
             await action.Should().ThrowAsync<KeyNotFoundException>();
+        }
+        [Fact]
+        public async Task ShouldBeReturnFilterUser()
+        {
+            var context = AppDbContextFactory.CreateInMemoryDbContext();
+            var transactionDto = fixture.Create<FilterTransactionDto>();
+
+            var wallet = new Wallet
+            { 
+                Id = Guid.NewGuid(),
+                Balance = 0,
+                UserId = transactionDto.userId,
+            };
+
+            var transactions = new List<TransactionDto>
+            {
+                new TransactionDto { SenderWalletId = wallet.Id, CreatedAt = DateTime.UtcNow.AddDays(-2) },
+                new TransactionDto{ SenderWalletId = wallet.Id, CreatedAt = DateTime.UtcNow.AddDays(-1) },
+                new TransactionDto { SenderWalletId = wallet.Id, CreatedAt = DateTime.UtcNow }
+            };
+
+
+            walletService.Setup((w=> w.GetUserBalanceWallet(transactionDto.userId))).ReturnsAsync((wallet));
+            
+            transactionRepository.Setup((w=> w.GetAllTransactionsUserSender(transactionDto)))
+                .ReturnsAsync(transactions.ToList());
+
+            var service = new TransactionService(transactionRepository.Object, walletService.Object);
+
+            var action = await service.GetUserAllUserTransactionsWithFilter(transactionDto);
+
+            action.Should().BeOfType<List<TransactionDto>>();
+        }
+
+        [Fact]
+        public void ShouldBeReturnWalletNotFoundError()
+        {
+            var wallet = fixture.Create<FilterTransactionDto>();
+
+            walletService.Setup((w=> w.GetUserBalanceWallet(wallet.userId))).ReturnsAsync((Wallet?) null);
+
+            var service = new TransactionService(transactionRepository.Object, walletService.Object);
+
+            Func<Task> action = async () => await service.GetUserAllUserTransactionsWithFilter(wallet);
+
+            action.Should().ThrowAsync<KeyNotFoundException>();
         }
 
         [Fact]

@@ -11,7 +11,7 @@ namespace Carteiras_Digitais.Test.Repositories.Tests.Database
         public static AppDbContext CreateInMemoryDbContext()
         {
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // Banco único para cada teste
+                .UseInMemoryDatabase(databaseName: "testDatabase") // Banco único para cada teste
                 .Options;
 
             var context = new AppDbContext(options);
