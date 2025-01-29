@@ -30,6 +30,47 @@ namespace Carteiras_Digitais.Test.Controller.Tests
             fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
+        [Fact]
+        public async Task ShouldBeReturnSuccessAndTransaction()
+        {
+            var login = new LoginDto
+            {
+                Email = "test@mail.com",
+                Password = "test"
+
+            };
+
+            var user = fixture.Build<User>()
+                .With(u => u.Email, login.Email)
+                .With(u => u.Password, login.Password)
+                .Create();
+
+            var controller = new TransactionController(serviceMock.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext
+                    {
+                        User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]{ new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                        }, "mock"))
+                    }
+
+                }
+            };
+            var transaction = fixture.Create<TransactionDto>();
+
+            serviceMock.Setup(w => w.TransactionToBalanceToReceiver(It.IsAny<TransactionDto>()))
+                .ReturnsAsync(transaction);
+
+
+            var result = await controller.TransactionBetweenUsers(transaction);
+
+            result.Should().BeOfType<OkObjectResult>();
+
+            var resultAsObject = result as OkObjectResult;
+
+            resultAsObject!.Value.Should().Be(transaction);
+        }
 
         [Fact]
         public async Task ShouldBeInvalidOperationInterceptor()
