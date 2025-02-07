@@ -22,9 +22,25 @@ namespace Carteiras_Digitais.Infrasctruture.Repositories
         }
         public void Seed()
         {
-            SeedUsers();
-            SeedWallets();
-            SeedTransactions();
+            if(IsDatabaseConnected())
+            {
+
+                SeedUsers();
+                SeedWallets();
+                SeedTransactions();
+            }
+        }
+
+        private bool IsDatabaseConnected()
+        {
+            try
+            {
+                return context.Database.CanConnect();
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public void SeedUsers()

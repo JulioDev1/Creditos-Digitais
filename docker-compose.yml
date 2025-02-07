@@ -1,8 +1,9 @@
 version: '3.8'
-
 services:
-  postgres:
-    image: 'postgres:latest'
+  
+  digital.database:
+    image: postgres:latest
+    container_name: digital.database
     environment:
       - 'POSTGRES_DB=digitalcard'
       - 'POSTGRES_PASSWORD=server'
@@ -14,21 +15,25 @@ services:
       interval: 5s
       retries: 5
       start_period: 10s
-
+  
   carteiras-digitais.api:
     image: ${DOCKER_REGISTRY-}carteirasdigitaisapi
     build:
       context: .
       dockerfile: Carteiras-Digitais/Dockerfile
     depends_on:
-      postgres:
+      digital.database:
         condition: service_healthy
     environment:
-      - 'DB_HOST=postgres'
+      - 'DB_HOST=digital.database'
       - 'DB_PORT=5432'
       - 'DB_USER=postgres'
       - 'DB_PASSWORD=server'
       - 'DB_NAME=digitalcard'
     ports:
       - '5000:5000'
+  
+  
+
+  
 

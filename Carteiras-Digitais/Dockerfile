@@ -8,6 +8,8 @@ EXPOSE 8080
 EXPOSE 8081
 
 
+
+
 # Esta fase é usada para compilar o projeto de serviço
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -20,13 +22,18 @@ COPY ["Carteiras-Digitais.Test/Carteiras-Digitais.Test.csproj", "Carteiras-Digit
 COPY ["Carteiras-Digitais.Application/Carteiras-Digitais.Application.csproj", "Carteiras-Digitais.Application/"]
 RUN dotnet restore "./Carteiras-Digitais/Carteiras-Digitais.API.csproj"
 COPY . .
-WORKDIR "/src/Carteiras-Digitais"
+WORKDIR "/src"
+RUN dotnet tool install --global dotnet-ef --version 9.0.1
+ENV PATH="$PATH:/root/.dotnet/tools"
+RUN dotnet ef database update --project Carteiras-Digitais.Infrasctruture --startup-project Carteiras-Digitais
+WORKDIR "./Carteiras-Digitais"
 RUN dotnet build "./Carteiras-Digitais.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Esta fase é usada para publicar o projeto de serviço a ser copiado para a fase final
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Carteiras-Digitais.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
 
 # Esta fase é usada na produção ou quando executada no VS no modo normal (padrão quando não está usando a configuração de Depuração)
 FROM base AS final
